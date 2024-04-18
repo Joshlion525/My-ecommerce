@@ -16,7 +16,7 @@ const CartContextProvider = ({ children }) => {
 
 	const getItemQuantity = (id) => {
 		const foundItem = cartItems.find((item) => item.id === id);
-		return foundItem.quantity;
+		return foundItem?.quantity;
 	};
 
 	const increaseItemQuantity = (id) => {
