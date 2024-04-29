@@ -37,7 +37,24 @@ const CartContextProvider = ({ children }) => {
 		});
 	};
 
-	const decreaseItemQuantity = () => {};
+	const decreaseItemQuantity = (id) => {
+		setCartItems((currItems) => {
+			const newItems = currItems.map((item) => {
+					if (item.id === id && item.quantity > 1) {
+						return { ...item, quantity: item.quantity - 1 };
+					} 
+					else if(item.id === id && item.quantity === 1) {
+						return null 
+					}
+					else {
+						return item
+					}
+				})
+
+				return newItems.filter(item => item !== null)
+		});
+	};
+
 
 	const removeFromCart = (id) => cartItems.filter((item) => item.id !== id);
 
