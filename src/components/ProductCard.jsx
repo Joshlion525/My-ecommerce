@@ -2,8 +2,12 @@ import { CartContext } from "@/context/CartContext";
 import { useContext } from "react";
 
 const ProductCard = ({ product }) => {
-	const { increaseItemQuantity, decreaseItemQuantity, getItemQuantity, removeFromCart } =
-		useContext(CartContext);
+	const {
+		increaseItemQuantity,
+		decreaseItemQuantity,
+		getItemQuantity,
+		removeFromCart,
+	} = useContext(CartContext);
 
 	const quantity = getItemQuantity(product.id);
 
@@ -44,9 +48,12 @@ const ProductCard = ({ product }) => {
 					{quantity > 0 ? (
 						<div className="flex flex-col items-center gap-2">
 							<div className="w-full flex items-center justify-between">
-								<button className="bg-blue-500 text-4xl hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-2 " onClick={() => {
-									decreaseItemQuantity(product.id)
-								}}>
+								<button
+									className="bg-blue-500 text-4xl hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-2 "
+									onClick={() => {
+										decreaseItemQuantity(product.id);
+									}}
+								>
 									-
 								</button>
 								<p className="text-4xl">{quantity}</p>
