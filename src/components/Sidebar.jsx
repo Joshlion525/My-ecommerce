@@ -10,13 +10,25 @@ import { useContext } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 
 const Sidebar = () => {
-	const { getCartQuantity, products, cartItems, getItemQuantity } =
-		useContext(CartContext);
+	const {
+		getCartQuantity,
+		products,
+		cartItems,
+		getItemQuantity,
+		removeFromCart,
+	} = useContext(CartContext);
 
 	const selectedProducts = cartItems.map((item) => {
 		return products.find((product) => product.id === item.id);
 	});
 	console.log(selectedProducts);
+	const totalPrice = (selectedProducts) => {
+		let total = 0;
+		selectedProducts.forEach((selectedProduct) => {
+			total += selectedProduct.price * getItemQuantity(selectedProduct.id);
+		});
+		return total;
+	};
 
 	return (
 		<nav className="flex justify-between items-center shadow px-4 py-2 md:py-4 md:px-8 fixed w-full bg-white">
@@ -76,7 +88,12 @@ const Sidebar = () => {
 										{getItemQuantity(selectedProduct.id) *
 											selectedProduct.price}
 									</p>
-									<button className="bg-blue-400 text-white px-2 py-1 cursor-pointer rounded-lg">
+									<button
+										className="bg-blue-400 text-white px-2 py-1 cursor-pointer rounded-lg"
+										onClick={() =>
+											removeFromCart(selectedProduct.id)
+										}
+									>
 										Remove
 									</button>
 								</div>
@@ -85,7 +102,9 @@ const Sidebar = () => {
 					</div>
 					<div className="flex items-center justify-between">
 						<p className="font-bold text-xl">Total</p>
-						<p className="font-bold text-xl">00000</p>
+						<p className="font-bold text-xl">
+							{totalPrice(selectedProducts)}
+						</p>
 					</div>
 				</SheetContent>
 			</Sheet>
