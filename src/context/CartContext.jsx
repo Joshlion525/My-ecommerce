@@ -4,13 +4,14 @@ import { createContext, useEffect, useState } from "react";
 export const CartContext = createContext({});
 
 const CartContextProvider = ({ children }) => {
+	const cartFromLocalStorage = JSON.parse(localStorage.getItem("cartItems") || "[]")
 	const [products, setProducts] = useState([]);
-	const [cartItems, setCartItems] = useState([]);
-	console.log(cartItems);
-	// {
-	//     id: 0,
-	//     quantity: 0,
-	// }
+	const [cartItems, setCartItems] = useState(cartFromLocalStorage);
+
+
+	useEffect(() => {
+		localStorage.setItem("cartItems", JSON.stringify(cartItems));
+	}, [cartItems]);
 
 	const getCartQuantity = cartItems.reduce((cartQuantity, item) => {
 		return (cartQuantity += item.quantity);
@@ -18,7 +19,7 @@ const CartContextProvider = ({ children }) => {
 
 	const getItemQuantity = (id) => {
 		const foundItem = cartItems.find((item) => item.id === id);
-		return foundItem?.quantity;
+		return foundItem?.quantity || 0;
 	};
 
 	const increaseItemQuantity = (id) => {
@@ -28,30 +29,24 @@ const CartContextProvider = ({ children }) => {
 			if (!foundItem) {
 				return [...currItems, { id, quantity: 1 }];
 			} else {
-				return currItems.map((item) => {
-					if (item.id === id) {
-						return { ...item, quantity: item.quantity + 1 };
-					} else {
-						return item;
-					}
-				});
+				return currItems.map((item) =>
+					item.id === id
+						? { ...item, quantity: item.quantity + 1 }
+						: item
+				);
 			}
 		});
 	};
 
 	const decreaseItemQuantity = (id) => {
 		setCartItems((currItems) => {
-			const newItems = currItems.map((item) => {
-				if (item.id === id && item.quantity > 1) {
-					return { ...item, quantity: item.quantity - 1 };
-				} else if (item.id === id && item.quantity === 1) {
-					return null;
-				} else {
-					return item;
-				}
-			});
-
-			return newItems.filter((item) => item !== null);
+			return currItems
+				.map((item) =>
+					item.id === id && item.quantity > 1
+						? { ...item, quantity: item.quantity - 1 }
+						: item
+				)
+				.filter((item) => item.quantity > 0);
 		});
 	};
 

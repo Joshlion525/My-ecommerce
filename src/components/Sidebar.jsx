@@ -18,14 +18,14 @@ const Sidebar = () => {
 		removeFromCart,
 	} = useContext(CartContext);
 
-	const selectedProducts = cartItems.map((item) => {
-		return products.find((product) => product.id === item.id);
-	});
-	console.log(selectedProducts);
+	const selectedProducts = cartItems
+		.map((item) => products.find((product) => product.id === item.id))
+		.filter((product) => product !== undefined);
 	const totalPrice = (selectedProducts) => {
 		let total = 0;
 		selectedProducts.forEach((selectedProduct) => {
-			total += selectedProduct.price * getItemQuantity(selectedProduct.id);
+			total +=
+				selectedProduct.price * getItemQuantity(selectedProduct.id);
 		});
 		return total;
 	};
